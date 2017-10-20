@@ -37,7 +37,7 @@ app.post('/call', (request, response) => {
       .keys(request.body)
       .filter( key => required.indexOf(key) === -1 )
 
-    response.json(missing)  
+    response.json({ required, missing, body: request.body })  
 })
 
 app.all('*', (request, response) => response.status(404).json({
