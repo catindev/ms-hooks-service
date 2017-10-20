@@ -22,6 +22,24 @@ app.get('/', (request, response) => response.json({
     version: 1
 }))
 
+app.post('/call', (request, response) => {
+    const required = [
+        'clientNumber',
+        'trunkNumber',
+        'redirectNumber',
+        'record',
+        'waitingDuration',
+        'conversationDuration',
+        'crmCallID'
+    ]
+    
+    const missing = Object
+      .keys(request.body)
+      .filter( key => required.indexOf(key) !== -1 )
+
+    response.json(missing)  
+})
+
 app.all('*', (request, response) => response.status(404).json({
     status: 404,
     message: 'Здесь ничего нет'
