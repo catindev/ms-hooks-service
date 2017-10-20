@@ -22,22 +22,7 @@ app.get('/', (request, response) => response.json({
     version: 1
 }))
 
-app.post('/call', (request, response) => {
-    const required = [
-        'clientNumber',
-        'trunkNumber',
-        'redirectNumber',
-        'record',
-        'waitingDuration',
-        'conversationDuration',
-        'crmCallID'
-    ]
-    
-    const payloadKeys = Object.keys(request.body)
-    const missing = required.filter( key => payloadKeys.indexOf(key) === -1 )
-
-    response.json({ required, missing, body: request.body })  
-})
+app.post('/call', require('./call-route'))
 
 app.all('*', (request, response) => response.status(404).json({
     status: 404,
