@@ -33,9 +33,8 @@ app.post('/call', (request, response) => {
         'crmCallID'
     ]
     
-    const missing = Object
-      .keys(request.body)
-      .filter( key => required.indexOf(key) === -1 )
+    const payloadKeys = Object.keys(request.body)
+    const missing = required.filter( key => payloadKeys.indexOf(key) === -1 )
 
     response.json({ required, missing, body: request.body })  
 })
