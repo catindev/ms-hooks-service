@@ -35,7 +35,7 @@ app.post('/call', (request, response) => {
     
     const missing = Object
       .keys(request.body)
-      .filter( key => required.indexOf(key) !== -1 )
+      .filter( key => required.indexOf(key) === -1 )
 
     response.json(missing)  
 })
