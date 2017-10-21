@@ -2,7 +2,7 @@ const CustomError = require('./utils/error')
 const registerCall = require('./call')
 
 module.exports = (request, response, next) => {
-    const required = ['clientNumber', 'trunkNumber']
+    const required = ['customerNumber', 'trunkNumber', 'waitingDuration']
     const payloadKeys = Object.keys(request.body)
     const fields = required.filter(key => payloadKeys.indexOf(key) === -1)
 
@@ -11,10 +11,9 @@ module.exports = (request, response, next) => {
         400
     )
 
+    request.path === '/callback' && (request.body.isCallback = true)    
+
     registerCall(request.body)
-        .then( result => {
-            console.log('register call', result)
-            response.json({ status: 200 })
-        })
+        .then( call => response.json({ status: 200, call }))
         .catch(next)    
 }

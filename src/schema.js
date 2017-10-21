@@ -43,6 +43,7 @@ const Trunk = mongoose.model('Trunk', new Schema({
 const customerSchema = new Schema({
     account: { type: ObjectId, ref: 'Account' },
     trunk: { type: ObjectId, ref: 'Trunk' },
+    user: { type: ObjectId, ref: 'User' },
     created: { type: Date, default: Date.now() },
     name: String, 
     phones: [String],
@@ -62,13 +63,13 @@ const Call = mongoose.model('Call', new Schema({
     customer: { type: ObjectId, ref: 'Customer' },
     trunk: { type: ObjectId, ref: 'Trunk' },
     user: { type: ObjectId, ref: 'User' },
-    type: { type: String, enum: ['incoming', 'callback'], default: 'incoming' },
     date: { type: Date, default: Date.now() },
     record: String,
     duration: {
         waiting: Number,
         conversation: Number
-    }
+    },
+    isCallback: Boolean
 }))
 
 
