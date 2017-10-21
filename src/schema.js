@@ -51,7 +51,7 @@ const customerSchema = new Schema({
     nonTargetedReason: String
 })
 customerSchema.pre('save', function( next ) {
-    if ( this.name ) this.name = generate()
+    if ( !this.name ) this.name = generate()
     this.phones = this.phones.map( phone => formatNumber(phone) )
     next()
 })

@@ -18,11 +18,14 @@ module.exports = async function ({
         .exec()
 
     if (!trunk || trunk === null) 
-        throw new CustomError(`Транк ${trunkNumber} не зарегистрирован`, 400)
+        throw new CustomError(`Транк ${ trunkNumber } не зарегистрирован`, 400)
+
+    if (record && !redirectNumber) 
+        throw new CustomError(`Не указан номер менеджера (redirectNumber) для отвеченного звонка`, 400)
 
     const account = trunk.account._id
 
-    const user = await User.findOne({ account, phones: redirectNumber })
+    const user = await User.findOne({ account, phones: formatNumber(redirectNumber) })
 
     let customer = await Customer.findOne({ account, phones: clientNumber })
 
@@ -37,7 +40,7 @@ module.exports = async function ({
         account,
         trunk: trunk._id,
         customer: customer._id,
-        user: user ? user._id : false,
+        user: user ? user._id : undefined,
         record,
         duration: {
           waiting: waitingDuration,
