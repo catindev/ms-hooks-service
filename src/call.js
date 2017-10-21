@@ -2,6 +2,7 @@ const toObjectId = require('mongoose').Types.ObjectId
 const { Account, Trunk, User, Customer, Call } = require('./schema')
 const CustomError = require('./utils/error')
 const namer = require('./utils/namer')
+const formatNumber = require('./utils/formatNumber')
 
 module.exports = async function ({
     clientNumber,
@@ -12,11 +13,12 @@ module.exports = async function ({
     conversationDuration = 0,
     crmCallID = false
 }) {
-
-    const trunk = await Trunk.findOne({ phone: trunkNumber })
+    const trunk = await Trunk.findOne({ phone: formatNumber(trunkNumber) })
         .populate('account')
         .exec()
-    if (!trunk || trunk === null) return false
+
+    if (!trunk || trunk === null) 
+        throw new CustomError(`Транк ${trunkNumber} не зарегистрирован`, 400)
 
     const account = trunk.account._id
 
