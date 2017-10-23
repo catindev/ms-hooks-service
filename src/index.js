@@ -26,8 +26,8 @@ app.post('/call', require('./call-route'))
 
 app.post('/callback', require('./call-route'))
 
-app.post('/github', (request, response) => {
-  console.log(request.body)
+app.get('/github', (request, response) => {
+  console.log(request.query)
   response.json({ status: 200 })
 })
 
