@@ -24,6 +24,10 @@ app.get('/', (request, response) => response.json({
 
 app.post('/call', require('./call-route'))
 app.post('/callback', require('./call-route'))
+app.post('/github', (request, response) => {
+  console.log(request.body)
+  response.json({ status: 200 })
+})
 
 app.all('*', (request, response) => response.status(404).json({
     status: 404,
