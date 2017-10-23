@@ -30,7 +30,10 @@ module.exports = async function ({
     let customer = await Customer.findOne({ account, phones: formatNumber(customerNumber, false) })
     if (!customer || customer === null) {
         const newCustomer = new Customer({ 
-            account, phones: [customerNumber], user: user ? user._id : undefined
+            account, 
+            phones: [customerNumber], 
+            trunk: trunk._id,
+            user: user ? user._id : undefined
         })
         customer = await newCustomer.save()
     }

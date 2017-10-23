@@ -24,11 +24,6 @@ app.get('/', (request, response) => response.json({
 
 app.post('/call', require('./call-route'))
 app.post('/callback', require('./call-route'))
-app.post('/test', (request, response) => {
-  console.log('/test request >>')
-  console.log(request.body)
-  response.json({ status: 200 })
-})
 
 app.all('*', (request, response) => response.status(404).json({
     status: 404,
