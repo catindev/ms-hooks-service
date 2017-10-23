@@ -23,6 +23,7 @@ app.get('/', (request, response) => response.json({
 }))
 
 app.post('/call', require('./call-route'))
+
 app.post('/callback', require('./call-route'))
 
 app.post('/github', (request, response) => {
