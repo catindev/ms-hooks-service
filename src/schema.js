@@ -47,8 +47,8 @@ const customerSchema = new Schema({
     created: { type: Date, default: Date.now() },
     name: String, 
     phones: [String],
-    notes: [String],
-    funnelStep: String,
+    notes: String,
+    funnelStep: { type: String, default: 'lead' },
     nonTargetedReason: String
 })
 customerSchema.pre('save', function( next ) {
