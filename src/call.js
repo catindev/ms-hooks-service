@@ -38,6 +38,8 @@ module.exports = async function ({
         customer = await newCustomer.save()
     }
 
+    console.log('customer', customer._id)
+
     if (!customer.user && user) 
         await Customer.update({ _id: customer._id }, { user: user._id })
 
