@@ -42,6 +42,7 @@ module.exports = async function ({
         await Customer.update({ _id: customer._id }, { user: user._id })
 
     const newCall = new Call({
+        date: new Date(),
         account,
         trunk: trunk._id,
         customer: customer._id,
