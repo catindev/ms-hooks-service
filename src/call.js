@@ -13,12 +13,15 @@ module.exports = async function ({
     record,
     isCallback
 }) {
-    const trunk = await Trunk.findOne({ phone: formatNumber(trunkNumber, false) })
+    const trunk = await Trunk.findOne({ 
+        phone: formatNumber(trunkNumber, false),
+        active: true
+    })
         .populate('account')
         .exec()
 
     if (!trunk || trunk === null) 
-        throw new CustomError(`Транк ${ trunkNumber } не зарегистрирован`, 400)
+        throw new CustomError(`Транк ${ trunkNumber } не зарегистрирован либо отключен`, 400)
 
     if (record && !managerNumber) 
         throw new CustomError(`Не указан номер менеджера для отвеченного звонка`, 400)
