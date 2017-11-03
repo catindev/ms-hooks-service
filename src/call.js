@@ -58,12 +58,14 @@ module.exports = async function ({
         isCallback
     })
 
-    await Customer.update(
+    const setActivity = await Customer.update(
         { _id: customer._id }, 
         { 
             lastUpdate: new Date(), 
             lastActivity: record? 'входящий звонок' : 'пропущенный'
         })
+
+    console.log(setActivity)
 
     return await newCall.save()
 }
