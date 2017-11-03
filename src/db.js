@@ -3,7 +3,7 @@ const { log, warn } = console
 
 mongoose.Promise = Promise
 
-mongoose.connection.openUri('mongodb://localhost/ms3')
+mongoose.connection.openUri('mongodb://localhost/ms3_testo')
 	.once('open', () => log('MongoDB connected'))
 	.on('close', () => {
 		log('MongoDB connection closed')
