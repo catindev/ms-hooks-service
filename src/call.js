@@ -44,7 +44,12 @@ module.exports = async function ({
     if (!customer.user && user) 
         await Customer.update({ _id: customer._id }, { user: user._id })
 
-    await Customer.update({ _id: customer._id }, { lastUpdate: new Date() })
+    await Customer.update(
+        { _id: customer._id }, 
+        { 
+            lastUpdate: new Date(), 
+            lastActivity: record? 'входящий звонок' : 'пропущенный'
+        })
 
     const newCall = new Call({
         date: new Date(),
