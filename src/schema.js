@@ -45,6 +45,8 @@ const customerSchema = new Schema({
     trunk: { type: ObjectId, ref: 'Trunk' },
     user: { type: ObjectId, ref: 'User' },
     created: { type: Date, default: Date.now() },
+    lastUpdate: { type: Date, default: new Date() },
+    lastActivity: String,    
     name: String, 
     phones: [String],
     notes: String,
