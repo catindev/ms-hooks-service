@@ -51,6 +51,8 @@ module.exports = async function ({
         customer: customer._id,
         user: user? user._id : undefined,
         record,
+        lastUpdate: new Date(),
+        lastActivity: record? 'входящий звонок' : 'пропущенный'
         duration: {
           waiting: waitingDuration,
           conversation: conversationDuration
@@ -64,8 +66,6 @@ module.exports = async function ({
             lastUpdate: new Date(), 
             lastActivity: record? 'входящий звонок' : 'пропущенный'
         })
-
-    console.log(setActivity)
 
     return await newCall.save()
 }
