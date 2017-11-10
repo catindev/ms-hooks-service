@@ -1,15 +1,15 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
-const { ObjectId } = Schema.Types
+const { ObjectId, Mixed } = Schema.Types
 const { generate } = require('./utils/namer')
 const formatNumber = require('./utils/formatNumber')
 
 const Log = mongoose.model('Log', new Schema({
     type: String,
-    who: { type: ObjectId, ref: 'Session' },
-    when: { type: Date, expires: 1209600, default: Date.now() },
+    who: { type: ObjectId, ref: 'User' },
+    when: { type: Date, default: new Date() },
     what: String,
-    details: String,
+    payload: Mixed
 }))
 
 const Account = mongoose.model('Account', new Schema({

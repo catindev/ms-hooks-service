@@ -3,6 +3,7 @@ const { Account, Trunk, User, Customer, Call } = require('./schema')
 const CustomError = require('./utils/error')
 const namer = require('./utils/namer')
 const formatNumber = require('./utils/formatNumber')
+const { addLog } = require('./logs')
 
 module.exports = async function ({
     customerNumber,
@@ -13,6 +14,19 @@ module.exports = async function ({
     record,
     isCallback
 }) {
+
+    addLog({ 
+        type: 'incoming', what: 'входящий звонок', 
+        payload: {
+            customerNumber,
+            trunkNumber,
+            managerNumber,
+            waitingDuration,
+            conversationDuration,
+            record,            
+        } 
+    })
+
     const trunk = await Trunk.findOne({ 
         phone: formatNumber(trunkNumber, false),
         active: true
