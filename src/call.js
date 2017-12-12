@@ -55,7 +55,7 @@ module.exports = async function ({
         customer = await newCustomer.save()
     }
 
-    if (!customer.user && user) 
+    if (!customer.user && user && record) 
         await Customer.update({ _id: customer._id }, { user: user._id })
 
     const newCall = new Call({
