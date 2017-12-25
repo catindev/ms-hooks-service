@@ -64,6 +64,7 @@ module.exports = async function ({
         trunk: trunk._id,
         customer: customer._id,
         user: user? user._id : undefined,
+        answeredBy: user? user._id : undefined,
         record,
         duration: {
           waiting: waitingDuration,

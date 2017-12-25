@@ -64,6 +64,7 @@ const Call = mongoose.model('Call', new Schema({
     account: { type: ObjectId, ref: 'Account' },
     customer: { type: ObjectId, ref: 'Customer' },
     trunk: { type: ObjectId, ref: 'Trunk' },
+    answeredBy: { type: ObjectId, ref: 'User' },
     user: { type: ObjectId, ref: 'User' },
     date: { type: Date, default: new Date() },
     record: String,
