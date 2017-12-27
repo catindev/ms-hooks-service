@@ -19,8 +19,8 @@ module.exports = async function ({
         customerNumber,
         trunkNumber,
         managerNumber,
-        waitingDuration = 0,
-        conversationDuration = 0,
+        waitingDuration,
+        conversationDuration,
         record,
         isCallback
     })
