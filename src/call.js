@@ -65,11 +65,10 @@ module.exports = async function ({
         customer = await newCustomer.save()
     }
 
-    console.log('is set user for', customerNumber, !customer.user && user && record)
-
     if (!customer.user && user && record) {
+        console.log('is set user for', customerNumber, true)
         await Customer.update({ _id: customer._id }, { user: user._id })
-    }
+    } else console.log('is set user for', customerNumber, false)
 
     const newCall = new Call({
         date: new Date(),
