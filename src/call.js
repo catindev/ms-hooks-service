@@ -15,6 +15,16 @@ module.exports = async function ({
     isCallback
 }) {
 
+    console.log('Hook', {
+        customerNumber,
+        trunkNumber,
+        managerNumber,
+        waitingDuration = 0,
+        conversationDuration = 0,
+        record,
+        isCallback
+    })
+
     addLog({ 
         type: 'incoming', what: 'входящий звонок', 
         payload: {
@@ -26,6 +36,8 @@ module.exports = async function ({
             record,            
         } 
     })
+
+    console.log('is set user for', customerNumber, !customer.user && user && record)
 
     const trunk = await Trunk.findOne({ 
         phone: formatNumber(trunkNumber, false),
@@ -54,8 +66,6 @@ module.exports = async function ({
         })
         customer = await newCustomer.save()
     }
-
-    console.log('is set user for', customerNumber, !customer.user && user && record)
 
     if (!customer.user && user && record) {
         await Customer.update({ _id: customer._id }, { user: user._id })
