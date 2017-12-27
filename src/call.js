@@ -55,6 +55,8 @@ module.exports = async function ({
         customer = await newCustomer.save()
     }
 
+    console.log('is set user for', customerNumber, !customer.user && user && record)
+
     if (!customer.user && user && record) {
         await Customer.update({ _id: customer._id }, { user: user._id })
     }
@@ -74,12 +76,12 @@ module.exports = async function ({
         isCallback
     })
 
-    const setActivity = await Customer.update(
-        { _id: customer._id }, 
-        { 
-            lastUpdate: new Date(), 
-            lastActivity: record? 'входящий звонок' : 'пропущенный'
-        })
+    // const setActivity = await Customer.update(
+    //     { _id: customer._id }, 
+    //     { 
+    //         lastUpdate: new Date(), 
+    //         lastActivity: record? 'входящий звонок' : 'пропущенный'
+    //     })
 
     return await newCall.save()
 }
