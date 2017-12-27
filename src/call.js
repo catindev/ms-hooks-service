@@ -50,13 +50,14 @@ module.exports = async function ({
             account, 
             phones: [customerNumber], 
             trunk: trunk._id,
-            user: user ? user._id : undefined
+            user: user && record ? user._id : undefined
         })
         customer = await newCustomer.save()
     }
 
-    if (!customer.user && user && record) 
+    if (!customer.user && user && record) {
         await Customer.update({ _id: customer._id }, { user: user._id })
+    }
 
     const newCall = new Call({
         date: new Date(),
@@ -79,8 +80,6 @@ module.exports = async function ({
             lastUpdate: new Date(), 
             lastActivity: record? 'входящий звонок' : 'пропущенный'
         })
-
-    console.log(setActivity)
 
     return await newCall.save()
 }
