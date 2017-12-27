@@ -37,8 +37,6 @@ module.exports = async function ({
         } 
     })
 
-    console.log('is set user for', customerNumber, !customer.user && user && record)
-
     const trunk = await Trunk.findOne({ 
         phone: formatNumber(trunkNumber, false),
         active: true
@@ -67,6 +65,8 @@ module.exports = async function ({
         customer = await newCustomer.save()
     }
 
+    console.log('is set user for', customerNumber, !customer.user && user && record)
+
     if (!customer.user && user && record) {
         await Customer.update({ _id: customer._id }, { user: user._id })
     }
@@ -92,6 +92,8 @@ module.exports = async function ({
     //         lastUpdate: new Date(), 
     //         lastActivity: record? 'входящий звонок' : 'пропущенный'
     //     })
+
+    console.log('Call is OK')
 
     return await newCall.save()
 }
