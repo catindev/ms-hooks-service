@@ -9,7 +9,7 @@ const animals = [
   { name: 'звездонос', gender: 'm' },
   { name: 'плащеносец', gender: 'm' },
   { name: 'аксолотль', gender: 'm' },
-  { name: 'руконожка', gender: 'f'},
+  { name: 'руконожка', gender: 'f' },
   { name: 'альпака', gender: 'f' },
   { name: 'долгопят', gender: 'm' },
   { name: 'октопус', gender: 'm' },
@@ -78,7 +78,11 @@ const animals = [
   { name: 'фламинго', gender: 'm' },
   { name: 'дельфин', gender: 'm' },
   { name: 'удав', gender: 'm' },
-  { name: 'касатка', gender: '' },
+  { name: 'касатка', gender: 'f' },
+  { name: 'манул', gender: 'm' },
+  { name: 'каракал', gender: 'f' },
+  { name: 'cайга', gender: 'f' },
+  { name: 'джейран', gender: 'm' }
 ]
 
 const words = [
@@ -118,7 +122,7 @@ const words = [
 ]
 
 let Words = Object.assign([], words)
-let Animals = Object.assign([], animals) 
+let Animals = Object.assign([], animals)
 
 function generate() {
   Words.length === 0 && (Words = Object.assign([], words))
@@ -127,7 +131,7 @@ function generate() {
   const ai = Math.floor(Math.random() * Animals.length)
   const wi = Math.floor(Math.random() * Words.length)
 
-  const name = `${ Words[wi][Animals[ai].gender] } ${ Animals[ai].name }`
+  const name = `${Words[wi][Animals[ai].gender]} ${Animals[ai].name}`
 
   Words.splice(wi, 1)
   Animals.splice(ai, 1)
