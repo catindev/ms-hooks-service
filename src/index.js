@@ -22,26 +22,6 @@ app.get('/', (request, response) => response.json({
     version: 1
 }))
 
-app.get('/incoming/:customer/:trunk', (request, response) => {
-    const { params: { customer, trunk } } = request
-    response.json({
-        status: 'ок',
-        method: 'GET',
-        customer,
-        trunk
-    })
-})
-
-app.post('/incoming/:customer/:trunk', (request, response) => {
-    const { params: { customer, trunk } } = request
-    response.json({
-        status: 'ок',
-        method: 'POST',
-        customer,
-        trunk
-    })
-})
-
 app.post('/call', require('./call-route'))
 
 app.post('/callback', require('./call-route'))
