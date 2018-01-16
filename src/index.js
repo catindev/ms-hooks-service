@@ -53,6 +53,7 @@ app.get('/github', (request, response) => {
 
 app.get('/incoming/:customer/:trunk', (request, response) => {
     const { params: { customer, trunk } } = request
+    console.log('Icoming from', customer, 'to', trunk, 'via GET')
     response.json({
         status: 'ок',
         method: 'GET',
@@ -63,6 +64,7 @@ app.get('/incoming/:customer/:trunk', (request, response) => {
 
 app.post('/incoming/:customer/:trunk', (request, response) => {
     const { params: { customer, trunk } } = request
+    console.log('Icoming from', customer, 'to', trunk, 'via POST')
     response.json({
         status: 'ок',
         method: 'POST',
