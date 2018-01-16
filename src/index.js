@@ -22,14 +22,55 @@ app.get('/', (request, response) => response.json({
     version: 1
 }))
 
+app.get('/incoming/:customer/:trunk', (request, response) => {
+    const { params: { customer, trunk } } = request
+    response.json({
+        status: 'ок',
+        method: 'GET',
+        customer,
+        trunk
+    })
+})
+
+app.post('/incoming/:customer/:trunk', (request, response) => {
+    const { params: { customer, trunk } } = request
+    response.json({
+        status: 'ок',
+        method: 'POST',
+        customer,
+        trunk
+    })
+})
+
 app.post('/call', require('./call-route'))
 
 app.post('/callback', require('./call-route'))
 
 app.get('/github', (request, response) => {
-  console.log(request.query)
-  response.json({ status: 200 })
+    console.log(request.query)
+    response.json({ status: 200 })
 })
+
+app.get('/incoming/:customer/:trunk', (request, response) => {
+    const { params: { customer, trunk } } = request
+    response.json({
+        status: 'ок',
+        method: 'GET',
+        customer,
+        trunk
+    })
+})
+
+app.post('/incoming/:customer/:trunk', (request, response) => {
+    const { params: { customer, trunk } } = request
+    response.json({
+        status: 'ок',
+        method: 'POST',
+        customer,
+        trunk
+    })
+})
+
 
 app.all('*', (request, response) => response.status(404).json({
     status: 404,
@@ -44,4 +85,4 @@ app.use((error, request, response, next) => {
 
 app.listen(PORT)
 
-console.log(`Listening on ${ PORT }...`)
+console.log(`Listening on ${PORT}...`)
