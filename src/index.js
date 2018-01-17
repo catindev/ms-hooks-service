@@ -42,17 +42,16 @@ app.get('/incoming/:customer/:trunk', (request, response) => {
     })
 })
 
-app.post('/incoming/:customer/:trunk', (request, response) => {
-    const { params: { customer, trunk } } = request
-    console.log('Icoming from', customer, 'to', trunk, 'via POST')
+app.get('/answer/:customer/:manager', (request, response) => {
+    const { params: { customer, manager } } = request
+    console.log('Icoming from', customer, 'to', trunk, 'via GET')
     response.json({
         status: 'ок',
-        method: 'POST',
+        method: 'GET',
         customer,
-        trunk
+        manager
     })
 })
-
 
 app.all('*', (request, response) => response.status(404).json({
     status: 404,
