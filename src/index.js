@@ -44,7 +44,7 @@ app.get('/incoming/:customer/:trunk', (request, response) => {
 
 app.get('/answer/:customer/:manager', (request, response) => {
     const { params: { customer, manager } } = request
-    console.log('Icoming from', customer, 'to', trunk, 'via GET')
+    console.log('Answer from', manager, 'to', customer, 'via GET')
     response.json({
         status: 'ок',
         method: 'GET',
