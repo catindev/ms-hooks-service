@@ -56,12 +56,14 @@ module.exports = async function ({
 
     let customer = await Customer.findOne({ account, phones: formatNumber(customerNumber, false) })
     if (!customer || customer === null) {
-        const newCustomer = new Customer({
+        const newCustomerData = {
             account,
             phones: [customerNumber],
             trunk: trunk._id,
             user: user && record ? user._id : undefined
-        })
+        }
+        if (user && record) newCustomerData.user = user._id
+        const newCustomer = new Customer(newCustomerData)
         customer = await newCustomer.save()
     }
 
@@ -75,7 +77,6 @@ module.exports = async function ({
         account,
         trunk: trunk._id,
         customer: customer._id,
-        record,
         duration: {
             waiting: waitingDuration,
             conversation: conversationDuration
@@ -83,6 +84,7 @@ module.exports = async function ({
         isCallback
     }
 
+    if (record) newCallData.record = record
     if (user || customer.user) newCallData.user = user._id || customer.user
     if (user) newCallData.answeredBy = user._id
 
