@@ -86,6 +86,7 @@ module.exports = async function ({
 
     if (record) newCallData.record = record
     if (user || customer.user) newCallData.user = user._id || customer.user
+    console.log('DEBUG: user || customer.user', user || customer.user)
     if (user) newCallData.answeredBy = user._id
 
     console.log('Saving call with user', newCallData.user)
