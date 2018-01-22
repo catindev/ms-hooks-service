@@ -37,8 +37,10 @@ module.exports = async function ({
         }
     })
 
+    console.log(':D', trunkNumber)
+
     const trunk = await Trunk.findOne({
-        phone: formatNumber(trunkNumber, false),
+        phone: '+' + trunkNumber,
         active: true
     })
         .populate('account')
@@ -52,9 +54,9 @@ module.exports = async function ({
 
     const account = trunk.account._id
 
-    const user = await User.findOne({ account, phones: formatNumber(managerNumber, false) })
+    const user = await User.findOne({ account, phones: '+' + managerNumber })
 
-    let customer = await Customer.findOne({ account, phones: formatNumber(customerNumber, false) })
+    let customer = await Customer.findOne({ account, phones: '+' + customerNumber })
     if (!customer || customer === null) {
         const newCustomerData = {
             account,
@@ -85,7 +87,7 @@ module.exports = async function ({
     }
 
     if (record) newCallData.record = record
-    if (user || customer.user) newCallData.user = user._id || customer.user
+    if (user || customer.user) newCallData.user = user ? user._id : customer.user
     console.log('DEBUG: user || customer.user', user || customer.user)
     if (user) newCallData.answeredBy = user._id
 
