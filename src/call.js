@@ -25,29 +25,29 @@ module.exports = async function ({
         isCallback
     })
 
-    addLog({ 
-        type: 'incoming', what: 'входящий звонок', 
+    addLog({
+        type: 'incoming', what: 'входящий звонок',
         payload: {
             customerNumber,
             trunkNumber,
             managerNumber,
             waitingDuration,
             conversationDuration,
-            record,            
-        } 
+            record,
+        }
     })
 
-    const trunk = await Trunk.findOne({ 
+    const trunk = await Trunk.findOne({
         phone: formatNumber(trunkNumber, false),
         active: true
     })
         .populate('account')
         .exec()
 
-    if (!trunk || trunk === null) 
-        throw new CustomError(`Транк ${ trunkNumber } не зарегистрирован либо отключен`, 400)
+    if (!trunk || trunk === null)
+        throw new CustomError(`Транк ${trunkNumber} не зарегистрирован либо отключен`, 400)
 
-    if (record && !managerNumber) 
+    if (record && !managerNumber)
         throw new CustomError(`Не указан номер менеджера для отвеченного звонка`, 400)
 
     const account = trunk.account._id
@@ -56,9 +56,9 @@ module.exports = async function ({
 
     let customer = await Customer.findOne({ account, phones: formatNumber(customerNumber, false) })
     if (!customer || customer === null) {
-        const newCustomer = new Customer({ 
-            account, 
-            phones: [customerNumber], 
+        const newCustomer = new Customer({
+            account,
+            phones: [customerNumber],
             trunk: trunk._id,
             user: user && record ? user._id : undefined
         })
@@ -70,20 +70,23 @@ module.exports = async function ({
         await Customer.update({ _id: customer._id }, { user: user._id })
     } else console.log('is set user for', customerNumber, false)
 
-    const newCall = new Call({
+    const newCallData = {
         date: new Date(),
         account,
         trunk: trunk._id,
         customer: customer._id,
-        user: user? user._id : undefined,
-        answeredBy: user? user._id : undefined,
         record,
         duration: {
-          waiting: waitingDuration,
-          conversation: conversationDuration
+            waiting: waitingDuration,
+            conversation: conversationDuration
         },
         isCallback
-    })
+    }
+
+    if (user || customer.user) newCallData.user = user._id || customer.user
+    if (user) newCallData.answeredBy = user._id
+
+    const newCall = new Call(newCallData)
 
     // const setActivity = await Customer.update(
     //     { _id: customer._id }, 
