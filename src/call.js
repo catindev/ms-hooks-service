@@ -88,15 +88,9 @@ module.exports = async function ({
     if (user || customer.user) newCallData.user = user._id || customer.user
     if (user) newCallData.answeredBy = user._id
 
+    console.log('Saving call with user', newCallData.user)
+
     const newCall = new Call(newCallData)
-
-    // const setActivity = await Customer.update(
-    //     { _id: customer._id }, 
-    //     { 
-    //         lastUpdate: new Date(), 
-    //         lastActivity: record? 'входящий звонок' : 'пропущенный'
-    //     })
-
     console.log('Call is OK')
 
     return await newCall.save()
