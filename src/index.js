@@ -2,6 +2,12 @@ const PORT = 5001
 
 const db = require('./db')
 
+const sendPush = require('./utils/sendPush')
+const { promisify } = require('util')
+const sendPushAsync = promisify(sendPush)
+const { incomingCustomer } = require('./customers')
+const { addLog } = require('./logs')
+
 const Raven = require('raven')
 Raven
     .config('https://b857cdba573e45548ed3373be0eaa279:6ea29192567446b38e4fb83cb2d751de@sentry.io/231401')
@@ -31,16 +37,7 @@ app.get('/github', (request, response) => {
     response.json({ status: 200 })
 })
 
-app.get('/incoming/:customer/:trunk', (request, response) => {
-    const { params: { customer, trunk } } = request
-    console.log('Icoming from', customer, 'to', trunk, 'via GET')
-    response.json({
-        status: 'ок',
-        method: 'GET',
-        customer,
-        trunk
-    })
-})
+app.get('/incoming/:customerNumber/:trunkNumber', require('./incomingRoute'))
 
 app.get('/answer/:customer/:manager', (request, response) => {
     const { params: { customer, manager } } = request

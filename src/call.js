@@ -1,9 +1,12 @@
 const toObjectId = require('mongoose').Types.ObjectId
 const { Account, Trunk, User, Customer, Call } = require('./schema')
 const CustomError = require('./utils/error')
-const namer = require('./utils/namer')
 const formatNumber = require('./utils/formatNumber')
 const { addLog } = require('./logs')
+
+const sendPush = require('./utils/sendPush')
+const { promisify } = require('util')
+const sendPushAsync = promisify(sendPush)
 
 module.exports = async function ({
     customerNumber,
