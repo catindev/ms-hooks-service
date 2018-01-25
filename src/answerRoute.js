@@ -18,10 +18,12 @@ function getNotificationTitle({ funnelStep }) {
 
 module.exports = (request, response, next) => {
     const { params: { customerNumber, managerNumber, trunkNumber } } = request
+
     console.log('Answer to', customerNumber, 'from', managerNumber, 'via GET and', trunkNumber)
+
     answerToCustomer({ customerNumber, managerNumber, trunkNumber })
         .then(({ customer, user }) => sendPushAsync({
-            app_id: "76760ad6-f2f4-4742-8baf-ff9c8f6bc3f6",
+            app_id: "af48135c-d059-404b-a898-3a77d883158a",
             headings: { "en": getNotificationTitle(customer), "ru": getNotificationTitle(customer) },
             contents: { "en": customer.name, "ru": customer.name },
             url: getCustomerURL(customer),
@@ -29,11 +31,7 @@ module.exports = (request, response, next) => {
                 { "field": "tag", "key": "userId", "relation": "=", "value": user._id },
                 { "field": "tag", "key": "device", "relation": "=", "value": "desktop" }
             ],
-            android_visibility: 1,
-            priority: 10,
-            ttl: 10000,
-            time_to_live: 100,
-            requireInteraction: true
+            priority: 10
         }))
         .then(pushResponse => {
             addLog({

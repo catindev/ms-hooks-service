@@ -1,7 +1,7 @@
 const sendNotification = function (data, callback) {
   const headers = {
     "Content-Type": "application/json; charset=utf-8",
-    "Authorization": "Basic MjIzMmY3ZmUtNjFjNC00ZGZkLWJlM2MtMWZhOTI4ZTllMTdk"
+    "Authorization": "Basic NDg3ZDA1ZmUtODA5MC00ODdhLThjNmItYTUzM2MxYzJjMGMx"
   };
 
   const options = {

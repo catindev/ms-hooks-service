@@ -19,10 +19,12 @@ function getCustomerURL({ funnelStep, _id }) {
 
 module.exports = (request, response, next) => {
     const { params: { customerNumber, trunkNumber } } = request
+
     console.log('Incoming from', customerNumber, 'to', trunkNumber, 'via GET')
+
     incomingCustomer({ customerNumber, trunkNumber })
         .then(customer => sendPushAsync({
-            app_id: "76760ad6-f2f4-4742-8baf-ff9c8f6bc3f6",
+            app_id: "af48135c-d059-404b-a898-3a77d883158a",
             headings: { "en": "Входящий звонок", "ru": "Входящий звонок" },
             contents: { "en": customer.name, "ru": customer.name },
             url: getCustomerURL(customer),
