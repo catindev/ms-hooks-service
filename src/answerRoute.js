@@ -11,7 +11,7 @@ function getCustomerURL({ funnelStep, _id }) {
     return `http://new.mindsales-crm.com/customers/${_id}`
 }
 
-function getNotificationContent({ funnelStep }) {
+function getNotificationTitle({ funnelStep }) {
     if (funnelStep === 'lead' || funnelStep === 'cold') return 'Заполнить профиль 📝'
     return 'Открыть профиль 📋'
 }
@@ -22,8 +22,8 @@ module.exports = (request, response, next) => {
     answerToCustomer({ customerNumber, managerNumber, trunkNumber })
         .then(({ customer, user }) => sendPushAsync({
             app_id: "76760ad6-f2f4-4742-8baf-ff9c8f6bc3f6",
-            headings: { "en": customer.name, "ru": customer.name },
-            contents: { "en": getNotificationContent(customer), "ru": getNotificationContent(customer) },
+            headings: { "en": getNotificationTitle(customer), "ru": getNotificationTitle(customer) },
+            contents: { "en": customer.name, "ru": customer.name },
             url: getCustomerURL(customer),
             filters: [
                 { "field": "tag", "key": "userId", "relation": "=", "value": user._id },
@@ -42,6 +42,7 @@ module.exports = (request, response, next) => {
                 method: 'GET',
                 customerNumber,
                 managerNumber,
+                trunkNumber,
                 pushResponse
             })
         })
