@@ -39,16 +39,7 @@ app.get('/github', (request, response) => {
 
 app.get('/incoming/:customerNumber/:trunkNumber', require('./incomingRoute'))
 
-app.get('/answer/:customer/:manager', (request, response) => {
-    const { params: { customer, manager } } = request
-    console.log('Answer from', manager, 'to', customer, 'via GET')
-    response.json({
-        status: 'ок',
-        method: 'GET',
-        customer,
-        manager
-    })
-})
+app.get('/answer/:customerNumber/:managerNumber/:trunkNumber', require('./answerRoute'))
 
 app.all('*', (request, response) => response.status(404).json({
     status: 404,

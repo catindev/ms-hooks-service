@@ -34,35 +34,29 @@ async function incomingCustomer({ customerNumber, trunkNumber }) {
     return await newCustomer.save()
 }
 
-async function answerToCustomer({ customerNumber, managerNumber }) {
-    const customer = await Customer.findOne({ account, phones: formatNumber(customerNumber, false) })
+async function answerToCustomer({ customerNumber, managerNumber, trunkNumber }) {
+    trunkNumber = '+' + trunkNumber
+    customerNumber = '+' + customerNumber
+    managerNumber = '+' + managerNumber
+
+    const trunk = await Trunk.findOne({ phone: trunkNumber, active: true })
+        .populate('account')
+        .exec()
+
+    if (!trunk || trunk === null)
+        throw new CustomError(`Транк ${trunkNumber} не зарегистрирован либо отключен`, 400)
+
+    const customer = await Customer.findOne({ account: trunk.account._id, phones: customerNumber })
     if (!customer || customer === null)
         throw new CustomError(`Не могу назначить менеджера — клиент ${customerNumber} не найден`, 400)
 
-    const user = await User.findOne({ account: customer.account, phones: formatNumber(managerNumber, false) })
+    const user = await User.findOne({ account: trunk.account._id, phones: managerNumber })
     if (!user || user === null)
         throw new CustomError(`Не могу назначить менеджера — менеджер ${managerNumber} не найден`, 400)
 
-    await Customer.update({ _id: customer._id }, { user: user._id })
+    if (!customer.user) await Customer.update({ _id: customer._id }, { user: user._id })
 
-    const pushResp = await sendPushAsync({
-        app_id: "76760ad6-f2f4-4742-8baf-ff9c8f6bc3f6",
-        headings: { "en": "Новый клиент", "ru": "Новый клиент" },
-        contents: { "en": "Заполните профиль", "ru": "Заполните профиль" },
-        url: 'http://new.mindsales-crm.com/leads/hot/' + customer._id,
-        filters: [
-            { "field": "tag", "key": "userId", "relation": "=", "value": user._id },
-            { "field": "tag", "key": "device", "relation": "=", "value": "desktop" }
-        ]
-    });
-
-    addLog({
-        type: 'push', what: 'пуш на заполнение профиля',
-        payload: {
-            customerNumber, managerNumber,
-            pushResponse: pushResp
-        }
-    })
+    return { user, customer }
 }
 
 module.exports = { incomingCustomer, answerToCustomer }
