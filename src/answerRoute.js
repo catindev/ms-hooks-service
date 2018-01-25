@@ -30,7 +30,10 @@ module.exports = (request, response, next) => {
                 { "field": "tag", "key": "device", "relation": "=", "value": "desktop" }
             ],
             android_visibility: 1,
-            priority: 10
+            priority: 10,
+            ttl: 10000,
+            time_to_live: 100,
+            requireInteraction: true
         }))
         .then(pushResponse => {
             addLog({
