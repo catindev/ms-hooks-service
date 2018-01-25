@@ -28,7 +28,9 @@ module.exports = (request, response, next) => {
             filters: [
                 { "field": "tag", "key": "userId", "relation": "=", "value": user._id },
                 { "field": "tag", "key": "device", "relation": "=", "value": "desktop" }
-            ]
+            ],
+            android_visibility: 1,
+            priority: 10
         }))
         .then(pushResponse => {
             addLog({

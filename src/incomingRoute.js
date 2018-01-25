@@ -29,7 +29,9 @@ module.exports = (request, response, next) => {
             filters: [
                 { "field": "tag", "key": "accountId", "relation": "=", "value": customer.account },
                 { "field": "tag", "key": "device", "relation": "=", "value": "mobile" }
-            ]
+            ],
+            android_visibility: 1,
+            priority: 10
         }))
         .then(pushResponse => {
             addLog({
