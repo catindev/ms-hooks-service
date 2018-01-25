@@ -9,10 +9,10 @@ const { promisify } = require('util')
 const sendPushAsync = promisify(sendPush)
 
 async function incomingCustomer({ customerNumber, trunkNumber }) {
-    const trunk = await Trunk.findOne({
-        phone: formatNumber(trunkNumber, false),
-        active: true
-    })
+    trunkNumber = '+' + trunkNumber
+    customerNumber = '+' + customerNumber
+
+    const trunk = await Trunk.findOne({ phone: trunkNumber, active: true })
         .populate('account')
         .exec()
 
@@ -20,16 +20,14 @@ async function incomingCustomer({ customerNumber, trunkNumber }) {
         throw new CustomError(`Транк ${trunkNumber} не зарегистрирован либо отключен`, 400)
 
     const existingCustomer = await Customer.findOne({
-        account: trunk.account._id,
-        phones: formatNumber(customerNumber, false)
+        account: trunk.account._id, phones: customerNumber
     })
 
     if (existingCustomer) return existingCustomer
 
-    const phone = formatNumber(customerNumber)
     const newCustomer = new Customer({
         account: trunk.account._id,
-        phones: [phone],
+        phones: [customerNumber],
         trunk: trunk._id
     })
 

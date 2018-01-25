@@ -21,10 +21,7 @@ module.exports = (request, response, next) => {
         .then(pushResponse => {
             addLog({
                 type: 'push', what: 'пуш на группу',
-                payload: {
-                    customerNumber, trunkNumber,
-                    pushResponse: pushResp
-                }
+                payload: { customerNumber, trunkNumber, pushResponse }
             })
             return response.json({
                 status: 'OK',
