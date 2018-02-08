@@ -46,16 +46,17 @@ const customerSchema = new Schema({
     user: { type: ObjectId, ref: 'User' },
     created: { type: Date, default: Date.now() },
     lastUpdate: { type: Date, default: new Date() },
-    lastActivity: String,    
-    name: String, 
+    lastActivity: String,
+    name: String,
     phones: [String],
     notes: String,
     funnelStep: { type: String, default: 'lead' },
-    nonTargetedReason: String
+    nonTargetedReason: String,
+    callsHistory: [{ type: ObjectId, ref: 'Call' }]
 })
-customerSchema.pre('save', function( next ) {
-    if ( !this.name ) this.name = generate()
-    this.phones = this.phones.map( phone => formatNumber(phone) )
+customerSchema.pre('save', function (next) {
+    if (!this.name) this.name = generate()
+    this.phones = this.phones.map(phone => formatNumber(phone))
     next()
 })
 const Customer = mongoose.model('Customer', customerSchema)
