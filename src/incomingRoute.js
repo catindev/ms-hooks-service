@@ -6,6 +6,9 @@ module.exports = (request, response, next) => {
     console.log('Incoming from', customerNumber, 'to', trunkNumber, 'via GET')
 
     incomingCustomer({ customerNumber, trunkNumber })
-        .then(dataForPush => response.json(dataForPush))
+        .then(pushContent => {
+            console.log('Push content', pushContent)
+            response.json(pushContent)
+        })
         .catch(next)
 }
