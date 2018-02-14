@@ -8,6 +8,15 @@ const sendPush = require('./utils/sendPush')
 const { promisify } = require('util')
 const sendPushAsync = promisify(sendPush)
 
+
+function getCustomerURL({ funnelStep, _id }) {
+    const prefix = 'beta'
+    if (funnelStep === 'lead') return `http://${prefix}.mindsales-crm.com/leads/hot/${_id}`
+    if (funnelStep === 'cold') return `http://${prefix}.mindsales-crm.com/leads/cold/${_id}`
+    if (funnelStep === 'reject' || funnelStep === 'deal') return `http://${prefix}.mindsales-crm.com/closed/${_id}`
+    return `http://${prefix}.mindsales-crm.com/customers/${_id}`
+}
+
 async function incomingCustomer({ customerNumber, trunkNumber }) {
     trunkNumber = '+' + trunkNumber
     customerNumber = '+' + customerNumber
@@ -21,9 +30,16 @@ async function incomingCustomer({ customerNumber, trunkNumber }) {
 
     const existingCustomer = await Customer.findOne({
         account: trunk.account._id, phones: customerNumber
-    })
+    }).populate('user trunk').lean().exec()
 
-    if (existingCustomer) return existingCustomer
+    if (existingCustomer) {
+        const { funnelStep, _id, user } = existingCustomer
+        return {
+            title: existingCustomer.name,
+            text: user ? user.name : trunk.name,
+            url: getCustomerURL({ funnelStep, _id })
+        }
+    }
 
     const newCustomer = new Customer({
         account: trunk.account._id,
@@ -31,7 +47,12 @@ async function incomingCustomer({ customerNumber, trunkNumber }) {
         trunk: trunk._id
     })
 
-    return await newCustomer.save()
+    const { funnelStep, _id } = await newCustomer.save()
+    return {
+        title: 'Новый клиент',
+        text: trunk.name,
+        url: getCustomerURL({ funnelStep, _id })
+    }
 }
 
 async function answerToCustomer({ customerNumber, managerNumber, trunkNumber }) {
