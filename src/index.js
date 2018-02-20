@@ -41,9 +41,9 @@ app.get(
     asyncMiddleware(require('./endpoints/answer'))
 )
 
-app.post('/call', asyncMiddleware(require('./endpoints/call')))
+app.post('/call', asyncMiddleware(require('./endpoints/endOfCall')))
 
-app.post('/callback', asyncMiddleware(require('./endpoints/call')))
+app.post('/callback', asyncMiddleware(require('./endpoints/endOfCallback')))
 
 app.all('*', (request, response) => response.status(404).json({
     status: 404,

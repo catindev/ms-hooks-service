@@ -32,6 +32,11 @@ module.exports = async (request, response, next) => {
 
     if (existingContact) {
         const { customer: { funnelStep, _id, user, name } } = existingContact
+        console.log('Push data', {
+            title: name,
+            text: user ? user.name : trunk.name,
+            url: getCustomerURL({ funnelStep, _id })
+        })
         return response.json({
             title: name,
             text: user ? user.name : trunk.name,

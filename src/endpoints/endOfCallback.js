@@ -4,7 +4,7 @@ const CustomError = require('../utils/error')
 const formatNumber = require('../utils/formatNumber')
 const { addLog } = require('../logs')
 
-// Routes POST /call & /callback
+// Route POST /callback
 module.exports = async (request, response, next) => {
     const required = ['customerNumber', 'trunkNumber', 'waitingDuration']
     const payloadKeys = Object.keys(request.body)
@@ -15,7 +15,7 @@ module.exports = async (request, response, next) => {
         400
     )
 
-    const isCallback = request.path === '/callback' ? true : false
+    const isCallback = true, direction = '→'
     const {
         customerNumber,
         trunkNumber,
@@ -25,7 +25,6 @@ module.exports = async (request, response, next) => {
         record
     } = request.body
 
-    const direction = isCallback === true ? '→' : '←'
     if (record) {
         console.log('End of success call:')
         console.log(direction, '    from', customerNumber, 'to', managerNumber, 'via', trunkNumber)
@@ -61,6 +60,10 @@ module.exports = async (request, response, next) => {
     if (!contact || contact === null)
         throw new CustomError(`Не могу сохранить звонок. Клиент ${customerNumber} не найден`, 400)
 
+    if (!contact.user || contact.user === null) {
+        await Customer.update({ _id: customer._id }, { user: user._id })
+    }
+
     const newCallData = {
         date: new Date(),
         account,
@@ -74,9 +77,14 @@ module.exports = async (request, response, next) => {
         contact: contact._id
     }
 
-    if (record) newCallData.record = record
-    if (user || contact.customer.user) newCallData.user = user ? user._id : contact.customer.user._id
-    if (user) newCallData.answeredBy = user._id
+    if (record) {
+        newCallData.record = record
+
+        if (contact.customer.user) newCallData.user = contact.customer.user._id
+        else newCallData.user = user._id
+
+        if (user) newCallData.answeredBy = user._id
+    }
 
     const newCall = new Call(newCallData)
     const createdCall = await newCall.save()
@@ -85,8 +93,8 @@ module.exports = async (request, response, next) => {
     console.log('______________')
 
     addLog({
-        type: record ? 'endofcall' : 'missing',
-        what: record ? 'звонок завершён' : 'пропущенный звонок',
+        type: record ? 'endofcallback' : 'missingcallback',
+        what: record ? 'коллбек завершён' : 'пропущенный исходящий',
         payload: {
             customerNumber,
             trunkNumber,
