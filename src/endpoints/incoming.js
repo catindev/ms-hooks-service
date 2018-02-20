@@ -32,14 +32,11 @@ module.exports = async (request, response, next) => {
 
     if (existingContact) {
         const { customer: { funnelStep, _id, user, name } } = existingContact
-        const pushContent = {
+        return response.json({
             title: name,
             text: user ? user.name : trunk.name,
             url: getCustomerURL({ funnelStep, _id })
-        }
-
-        console.log('Push content', pushContent)
-        return response.json(pushContent)
+        })
     }
 
     const newCustomer = new Customer({
@@ -63,19 +60,15 @@ module.exports = async (request, response, next) => {
     createdCustomer.contacts.push(createdContact)
     await createdCustomer.save()
 
-    const pushContent = {
-        title: 'Новый клиент',
-        text: trunk.name,
-        url: getCustomerURL({ funnelStep, _id })
-    }
-
     addLog({
         type: 'incoming',
         what: 'входящий звонок',
-        payload: {
-            customerNumber, trunkNumber, pushContent
-        }
+        payload: { customerNumber, trunkNumber }
     })
 
-    response.json(pushContent)
+    response.json({
+        title: 'Новый клиент',
+        text: trunk.name,
+        url: getCustomerURL({ funnelStep, _id })
+    })
 }
