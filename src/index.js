@@ -1,11 +1,6 @@
 const PORT = 5001
 
 const db = require('./db')
-
-const sendPush = require('./utils/sendPush')
-const { promisify } = require('util')
-const sendPushAsync = promisify(sendPush)
-const { incomingCustomer } = require('./customers')
 const { addLog } = require('./logs')
 
 const Raven = require('raven')
@@ -23,23 +18,32 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
+const asyncMiddleware = fn => (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next)
+}
+
 app.get('/', (request, response) => response.json({
-    name: 'ms-hooks-service',
-    version: 1
+    name: 'ms-hooks-service'
 }))
 
-app.post('/call', require('./call-route'))
+app.get('/about', (request, response) => response.json({
+    name: 'ms-hooks-service',
+    version: 2,
+    changelog: 'http://telegra.ph/ms-hooks-changelog-02-20'
+}))
 
-app.post('/callback', require('./call-route'))
+app.get(
+    '/incoming/:customerNumber/:trunkNumber',
+    asyncMiddleware(require('./endpoints/incoming'))
+)
+app.get(
+    '/answer/:customerNumber/:managerNumber/:trunkNumber',
+    asyncMiddleware(require('./endpoints/answer'))
+)
 
-app.get('/github', (request, response) => {
-    console.log(request.query)
-    response.json({ status: 200 })
-})
+app.post('/call', asyncMiddleware(require('./endpoints/call')))
 
-app.get('/incoming/:customerNumber/:trunkNumber', require('./incomingRoute'))
-
-app.get('/answer/:customerNumber/:managerNumber/:trunkNumber', require('./answerRoute'))
+app.post('/callback', asyncMiddleware(require('./endpoints/call')))
 
 app.all('*', (request, response) => response.status(404).json({
     status: 404,

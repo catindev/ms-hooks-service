@@ -40,22 +40,30 @@ const Trunk = mongoose.model('Trunk', new Schema({
     active: { type: Boolean, default: false },
 }))
 
+const Contact = mongoose.model('Contact', new Schema({
+    account: { type: ObjectId, ref: 'Account' },
+    customer: { type: ObjectId, ref: 'Customer' },
+    name: String,
+    phone: String
+}))
+
 const customerSchema = new Schema({
     account: { type: ObjectId, ref: 'Account' },
     trunk: { type: ObjectId, ref: 'Trunk' },
     user: { type: ObjectId, ref: 'User' },
     created: { type: Date, default: Date.now() },
     lastUpdate: { type: Date, default: new Date() },
-    lastActivity: String,    
-    name: String, 
+    lastActivity: String,
+    name: String,
     phones: [String],
     notes: String,
     funnelStep: { type: String, default: 'lead' },
-    nonTargetedReason: String
+    nonTargetedReason: String,
+    contacts: [{ type: ObjectId, ref: 'Contact' }]
 })
-customerSchema.pre('save', function( next ) {
-    if ( !this.name ) this.name = generate()
-    this.phones = this.phones.map( phone => formatNumber(phone) )
+customerSchema.pre('save', function (next) {
+    if (!this.name) this.name = generate()
+    this.phones = this.phones.map(phone => formatNumber(phone))
     next()
 })
 const Customer = mongoose.model('Customer', customerSchema)
@@ -65,6 +73,7 @@ const Call = mongoose.model('Call', new Schema({
     customer: { type: ObjectId, ref: 'Customer' },
     trunk: { type: ObjectId, ref: 'Trunk' },
     answeredBy: { type: ObjectId, ref: 'User' },
+    contact: { type: ObjectId, ref: 'Contact' },
     user: { type: ObjectId, ref: 'User' },
     date: { type: Date, default: new Date() },
     record: String,
@@ -75,12 +84,12 @@ const Call = mongoose.model('Call', new Schema({
     isCallback: Boolean
 }))
 
-
 module.exports = {
     Log,
     Account,
     User,
     Trunk,
     Call,
+    Contact,
     Customer
 }
