@@ -27,11 +27,13 @@ module.exports = async (request, response, next) => {
 
     if (record) {
         console.log('End of success call:')
-        console.log('from', customerNumber, 'to', managerNumber, 'via', trunkNumber)
+        console.log('|    from', customerNumber, 'to', managerNumber, 'via', trunkNumber)
     } else {
         console.log('End of missing call:')
-        console.log('from', customerNumber, 'via', trunkNumber)
+        console.log('|    from', customerNumber, 'via', trunkNumber)
     }
+
+    console.log('Callback call —', isCallback)
 
     const trunk = await Trunk.findOne({
         phone: formatNumber(trunkNumber, false),
