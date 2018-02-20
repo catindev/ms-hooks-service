@@ -69,13 +69,13 @@ module.exports = async (request, response, next) => {
             waiting: waitingDuration,
             conversation: conversationDuration
         },
-        user: contact.customer.user._id,
         isCallback,
         contact: contact._id
     }
 
     if (record) {
         newCallData.record = record
+        newCallData.user = contact.customer.user._id
         newCallData.answeredBy = user._id
     }
 
