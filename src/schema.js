@@ -40,6 +40,13 @@ const Trunk = mongoose.model('Trunk', new Schema({
     active: { type: Boolean, default: false },
 }))
 
+const Contact = mongoose.model('Contact', new Schema({
+    account: { type: ObjectId, ref: 'Account' },
+    customer: { type: ObjectId, ref: 'Customer' },
+    name: String,
+    phone: String
+}))
+
 const customerSchema = new Schema({
     account: { type: ObjectId, ref: 'Account' },
     trunk: { type: ObjectId, ref: 'Trunk' },
@@ -52,7 +59,7 @@ const customerSchema = new Schema({
     notes: String,
     funnelStep: { type: String, default: 'lead' },
     nonTargetedReason: String,
-    callsHistory: [{ type: ObjectId, ref: 'Call' }]
+    contacts: [{ type: ObjectId, ref: 'Contact' }]
 })
 customerSchema.pre('save', function (next) {
     if (!this.name) this.name = generate()
@@ -66,6 +73,7 @@ const Call = mongoose.model('Call', new Schema({
     customer: { type: ObjectId, ref: 'Customer' },
     trunk: { type: ObjectId, ref: 'Trunk' },
     answeredBy: { type: ObjectId, ref: 'User' },
+    contact: { type: ObjectId, ref: 'Contact' },
     user: { type: ObjectId, ref: 'User' },
     date: { type: Date, default: new Date() },
     record: String,
@@ -76,12 +84,12 @@ const Call = mongoose.model('Call', new Schema({
     isCallback: Boolean
 }))
 
-
 module.exports = {
     Log,
     Account,
     User,
     Trunk,
     Call,
+    Contact,
     Customer
 }

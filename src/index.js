@@ -1,6 +1,7 @@
 const PORT = 5001
 
 const db = require('./db')
+const { addLog } = require('./logs')
 
 const Raven = require('raven')
 Raven
@@ -17,41 +18,32 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
+const asyncMiddleware = fn => (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next)
+}
+
 app.get('/', (request, response) => response.json({
-    name: 'ms-hooks-service',
-    version: 1
+    name: 'ms-hooks-service'
 }))
 
-app.post('/call', require('./call-route'))
+app.get('/about', (request, response) => response.json({
+    name: 'ms-hooks-service',
+    version: 2,
+    changelog: 'http://telegra.ph/ms-hooks-changelog-02-20'
+}))
 
-app.post('/callback', require('./call-route'))
+app.get(
+    '/incoming/:customerNumber/:trunkNumber',
+    asyncMiddleware(require('./endpoints/incoming'))
+)
+app.get(
+    '/answer/:customerNumber/:managerNumber/:trunkNumber',
+    asyncMiddleware(require('./endpoints/answer'))
+)
 
-app.get('/github', (request, response) => {
-    console.log(request.query)
-    response.json({ status: 200 })
-})
+app.post('/call', asyncMiddleware(require('./endpoints/endOfCall')))
 
-app.get('/incoming/:customer/:trunk', (request, response) => {
-    const { params: { customer, trunk } } = request
-    console.log('Icoming from', customer, 'to', trunk, 'via GET')
-    response.json({
-        status: 'ок',
-        method: 'GET',
-        customer,
-        trunk
-    })
-})
-
-app.get('/answer/:customer/:manager', (request, response) => {
-    const { params: { customer, manager } } = request
-    console.log('Answer from', manager, 'to', customer, 'via GET')
-    response.json({
-        status: 'ок',
-        method: 'GET',
-        customer,
-        manager
-    })
-})
+app.post('/callback', asyncMiddleware(require('./endpoints/endOfCallback')))
 
 app.all('*', (request, response) => response.status(404).json({
     status: 404,
