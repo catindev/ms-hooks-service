@@ -57,7 +57,7 @@ module.exports = async (request, response, next) => {
         account: trunk.account._id,
         customer: _id,
         phone: customerNumber,
-        name: 'Телефон'
+        name: 'Основной'
     })
 
     const createdContact = await newContact.save()
