@@ -37,6 +37,10 @@ app.get(
     asyncMiddleware(require('./endpoints/incoming'))
 )
 app.get(
+    '/widget/:customerNumber/:trunkNumber',
+    asyncMiddleware(require('./endpoints/widget'))
+)
+app.get(
     '/answer/:customerNumber/:managerNumber/:trunkNumber',
     asyncMiddleware(require('./endpoints/answer'))
 )

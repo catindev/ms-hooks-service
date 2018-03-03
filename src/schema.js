@@ -59,6 +59,7 @@ const customerSchema = new Schema({
     notes: String,
     funnelStep: { type: String, default: 'lead' },
     nonTargetedReason: String,
+    fromWidget:{ type: Boolean, default: false },
     contacts: [{ type: ObjectId, ref: 'Contact' }]
 })
 customerSchema.pre('save', function (next) {
@@ -75,6 +76,7 @@ const Call = mongoose.model('Call', new Schema({
     answeredBy: { type: ObjectId, ref: 'User' },
     contact: { type: ObjectId, ref: 'Contact' },
     user: { type: ObjectId, ref: 'User' },
+    fromWidget:{ type: Boolean, default: false },
     date: { type: Date, default: new Date() },
     record: String,
     duration: {
