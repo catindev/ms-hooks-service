@@ -1,12 +1,14 @@
 const toObjectId = require('mongoose').Types.ObjectId
 const { Account, Trunk, User, Customer, Call, Contact } = require('../schema')
 const CustomError = require('../utils/error')
-const formatNumber = require('../utils/formatNumber')
+// const formatNumber = require('../utils/formatNumber')
 const { addLog } = require('../logs')
+
+const formatNumber = (number, strictMode) => `+${number}`
 
 // Route POST /callback
 module.exports = async (request, response, next) => {
-    const required = ['customerNumber', 'trunkNumber', 'waitingDuration']
+    const required = ['customerNumber', 'trunkNumber']
     const payloadKeys = Object.keys(request.body)
     const fields = required.filter(key => payloadKeys.indexOf(key) === -1)
 
