@@ -13,6 +13,12 @@ module.exports = async (request, response, next) => {
     trunkNumber = '+' + trunkNumber
     customerNumber = '+' + customerNumber
 
+    addLog({
+        type: 'incoming',
+        what: 'входящий звонок',
+        payload: { customerNumber, trunkNumber }
+    })
+
     const trunk = await Trunk.findOne({ phone: trunkNumber, active: true })
         .populate('account')
         .exec()
@@ -64,12 +70,6 @@ module.exports = async (request, response, next) => {
 
     createdCustomer.contacts.push(createdContact)
     await createdCustomer.save()
-
-    addLog({
-        type: 'incoming',
-        what: 'входящий звонок',
-        payload: { customerNumber, trunkNumber }
-    })
 
     response.json({
         title: 'Новый клиент',
