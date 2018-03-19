@@ -1,10 +1,10 @@
 const toObjectId = require('mongoose').Types.ObjectId
 const { Account, Trunk, User, Customer, Call, Contact } = require('../schema')
 const CustomError = require('../utils/error')
-const formatNumber = require('../utils/formatNumber')
 const { addLog } = require('../logs')
 
-// const formatNumber = (number, strictMode) => `+${number}`
+// const formatNumber = require('../utils/formatNumber')
+const formatNumber = (number, strictMode) => `+${number}`
 
 // Route POST /callback
 module.exports = async (request, response, next) => {

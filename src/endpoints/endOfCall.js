@@ -3,8 +3,8 @@ const { Account, Trunk, User, Customer, Call, Contact } = require('../schema')
 const CustomError = require('../utils/error')
 const { addLog } = require('../logs')
 
-const formatNumber = require('../utils/formatNumber')
-// const formatNumber = (number, strictMode) => `+${number}`
+// const formatNumber = require('../utils/formatNumber')
+const formatNumber = (number, strictMode) => `+${number}`
 
 // Route POST /call
 module.exports = async (request, response, next) => {
