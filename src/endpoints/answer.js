@@ -1,5 +1,5 @@
 const toObjectId = require('mongoose').Types.ObjectId
-const { Account, Trunk, User, Customer, Call, Contact } = require('../schema')
+const { Account, Trunk, User, Customer, Call, Contact, Breadcrumb } = require('../schema')
 const CustomError = require('../utils/error')
 const getCustomerURL = require('../utils/getCustomerURL')
 const { addLog } = require('../logs')
@@ -38,7 +38,17 @@ module.exports = async (request, response, next) => {
     if (!user || user === null)
         throw new CustomError(`Не могу назначить менеджера — менеджер ${managerNumber} не найден`, 400)
 
-    if (!contact.customer.user) await Customer.update({ _id: contact.customer._id }, { user: user._id })
+    if (!contact.customer.user) {
+        await Customer.update({ _id: contact.customer._id }, { user: user._id })
+
+        const newBreadcrumb = new Breadcrumb({
+            account: trunk.account._id,
+            customer: contact.customer._id,
+            user: user._id,
+            type: 'assigned'
+        })
+        const createdBreadcrumb = await newBreadcrumb.save()
+    }
 
     addLog({
         type: 'answer',

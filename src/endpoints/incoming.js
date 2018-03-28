@@ -38,11 +38,6 @@ module.exports = async (request, response, next) => {
 
     if (existingContact) {
         const { customer: { funnelStep, _id, user, name } } = existingContact
-        // console.log('Push data', {
-        //     title: name,
-        //     text: user ? user.name : trunk.name,
-        //     url: getCustomerURL({ funnelStep, _id })
-        // })
         return response.json({
             title: name,
             text: user ? user.name : trunk.name,
@@ -70,6 +65,13 @@ module.exports = async (request, response, next) => {
 
     createdCustomer.contacts.push(createdContact)
     await createdCustomer.save()
+
+    const newBreadcrumb = new Breadcrumb({
+        account: trunk.account._id,
+        customer: createdCustomer._id,
+        type: 'created'
+    })
+    const createdBreadcrumb = await newBreadcrumb.save()
 
     response.json({
         title: 'Новый клиент',

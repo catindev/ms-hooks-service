@@ -87,6 +87,16 @@ module.exports = async (request, response, next) => {
     console.log('New call saved')
     console.log('______________')
 
+    const newBreadcrumbData = {
+        account,
+        customer: contact.customer._id,
+        type: 'call',
+        call: createdCall._id
+    }
+    if (createdCall.user) newBreadcrumbData.user = createdCall.user
+    const newBreadcrumb = new Breadcrumb(newBreadcrumbData)
+    const createdBreadcrumb = await newBreadcrumb.save()
+
     addLog({
         type: record ? 'endofcall' : 'missing',
         what: record ? 'звонок завершён' : 'пропущенный звонок',

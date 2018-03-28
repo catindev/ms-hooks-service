@@ -59,7 +59,7 @@ const customerSchema = new Schema({
     notes: String,
     funnelStep: { type: String, default: 'lead' },
     nonTargetedReason: String,
-    fromWidget:{ type: Boolean, default: false },
+    fromWidget: { type: Boolean, default: false },
     contacts: [{ type: ObjectId, ref: 'Contact' }]
 })
 customerSchema.pre('save', function (next) {
@@ -76,7 +76,7 @@ const Call = mongoose.model('Call', new Schema({
     answeredBy: { type: ObjectId, ref: 'User' },
     contact: { type: ObjectId, ref: 'Contact' },
     user: { type: ObjectId, ref: 'User' },
-    fromWidget:{ type: Boolean, default: false },
+    fromWidget: { type: Boolean, default: false },
     date: { type: Date, default: new Date() },
     record: String,
     duration: {
@@ -86,6 +86,37 @@ const Call = mongoose.model('Call', new Schema({
     isCallback: Boolean
 }))
 
+const Breadcrumb = mongoose.model('Breadcrumb', new Schema({
+    account: { type: ObjectId, ref: 'Account' },
+    customer: { type: ObjectId, ref: 'Customer' },
+    date: { type: Date, default: Date.now() },
+    type: {
+        type: String,
+        enum: [
+            'created', // 🐣
+            'assigned', // 👥
+            'call', // ⬅
+            'callback', // ➡
+            'note', // 💬
+            'deal', // 💰
+            'reject', // 🚽
+            'reopen' // 🔄
+        ]
+    },
+    comment: String,
+
+    /* Спецполя */
+
+    // для assigned 
+    // пустое когда created по звонку с АТС и на пропущенный звонок
+    user: { type: ObjectId, ref: 'User' },
+
+    call: { type: ObjectId, ref: 'Call' }, // для call
+    reason: String, // для reject
+    amount: Number, // для deal
+}, { strict: false }))
+
+
 module.exports = {
     Log,
     Account,
@@ -93,5 +124,6 @@ module.exports = {
     Trunk,
     Call,
     Contact,
-    Customer
+    Customer,
+    Breadcrumb
 }
