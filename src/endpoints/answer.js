@@ -34,7 +34,10 @@ module.exports = async (request, response, next) => {
     if (!contact || contact === null)
         throw new CustomError(`Не могу назначить менеджера — клиент ${customerNumber} не найден`, 400)
 
-    const user = await User.findOne({ account: trunk.account._id, phones: managerNumber })
+    const user = await User.findOne({
+        account: trunk.account._id, phones: managerNumber
+    })
+
     if (!user || user === null)
         throw new CustomError(`Не могу назначить менеджера — менеджер ${managerNumber} не найден`, 400)
 
@@ -42,6 +45,7 @@ module.exports = async (request, response, next) => {
         await Customer.update({ _id: contact.customer._id }, { user: user._id })
 
         const newBreadcrumb = new Breadcrumb({
+            date: new Date(),
             account: trunk.account._id,
             customer: contact.customer._id,
             user: user._id,

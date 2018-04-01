@@ -68,9 +68,10 @@ module.exports = async (request, response, next) => {
     await createdCustomer.save()
 
     const newBreadcrumb = new Breadcrumb({
+        date: new Date(),
         account: trunk.account._id,
         customer: createdCustomer._id,
-        type: 'created'
+        type: 'created',
     })
     const createdBreadcrumb = await newBreadcrumb.save()
 

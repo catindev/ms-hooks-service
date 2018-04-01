@@ -95,6 +95,7 @@ module.exports = async (request, response, next) => {
     console.log('______________')
 
     const newBreadcrumbData = {
+        date: new Date(),
         account,
         customer: contact.customer._id,
         type: 'callback',
