@@ -62,10 +62,6 @@ module.exports = async (request, response, next) => {
     if (!contact || contact === null)
         throw new CustomError(`Не могу сохранить звонок. Клиент ${customerNumber} не найден`, 400)
 
-    if (!contact.user || contact.user === null) {
-        await Customer.update({ _id: contact.customer._id }, { user: user._id })
-    }
-
     const newCallData = {
         date: new Date(),
         account,
@@ -80,6 +76,10 @@ module.exports = async (request, response, next) => {
     }
 
     if (record) {
+        if (!contact.user || contact.user === null) {
+            await Customer.update({ _id: contact.customer._id }, { user: user._id })
+        }
+
         newCallData.record = record
 
         if (contact.customer.user) newCallData.user = contact.customer.user._id
