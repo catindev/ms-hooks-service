@@ -76,7 +76,7 @@ module.exports = async (request, response, next) => {
     }
 
     if (record) {
-        if (!contact.user || contact.user === null) {
+        if (!contact.customer.user || contact.customer.user === null) {
             await Customer.update({ _id: contact.customer._id }, { user: user._id })
             const newBreadcrumb = new Breadcrumb({
                 date: new Date(), account,
