@@ -60,5 +60,6 @@ module.exports = async (request, response, next) => {
         payload: { customerNumber, managerNumber, trunkNumber }
     })
 
-    response.json({ user, customer: contact.customer })
+    // response.json({ user, customer: contact.customer })
+    response.json({ status: 200 })
 }
