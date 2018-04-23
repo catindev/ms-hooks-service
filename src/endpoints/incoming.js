@@ -42,6 +42,7 @@ module.exports = async (request, response, next) => {
         return response.json({
             title: name,
             text: user ? user.name : trunk.name,
+            customer_id: existingContact.customer._id,
             url: getCustomerURL({ funnelStep, _id })
         })
     }
@@ -80,6 +81,7 @@ module.exports = async (request, response, next) => {
     response.json({
         title: 'Новый клиент',
         text: trunk.name,
+        customer_id: createdCustomer._id,
         url: getCustomerURL({ funnelStep, _id })
     })
 }
