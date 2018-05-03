@@ -1,5 +1,5 @@
 const toObjectId = require('mongoose').Types.ObjectId
-const { Account, Trunk, User, Customer, Call, Contact } = require('../schema')
+const { Account, Trunk, User, Customer, Call, Contact, Breadcrumb } = require('../schema')
 const CustomError = require('../utils/error')
 const getCustomerURL = require('../utils/getCustomerURL')
 const { addLog } = require('../logs')
