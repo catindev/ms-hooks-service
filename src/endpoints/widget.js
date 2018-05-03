@@ -66,6 +66,19 @@ module.exports = async (request, response, next) => {
     createdCustomer.contacts.push(createdContact)
     await createdCustomer.save()
 
+    const newBreadcrumb = new Breadcrumb({
+        date: new Date(),
+        account: trunk.account._id,
+        customer: createdCustomer._id,
+        type: 'created',
+        trunk: trunk._id
+    })
+    const createdBreadcrumb = await newBreadcrumb.save()
+    await Customer.findOneAndUpdate(
+        { _id: createdCustomer._id },
+        { $set: { breadcrumbs: [createdBreadcrumb._id] } }
+    )
+
     addLog({
         type: 'incoming',
         what: 'входящий c сайта',

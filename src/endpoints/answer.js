@@ -52,6 +52,10 @@ module.exports = async (request, response, next) => {
             type: 'assigned'
         })
         const createdBreadcrumb = await newBreadcrumb.save()
+        await Customer.findOneAndUpdate(
+            { _id: contact.customer._id },
+            { $push: { breadcrumbs: createdBreadcrumb._id } }
+        )
     }
 
     addLog({

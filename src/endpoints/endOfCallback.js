@@ -111,6 +111,10 @@ module.exports = async (request, response, next) => {
     if (createdCall.user) newBreadcrumbData.user = createdCall.user
     const newBreadcrumb = new Breadcrumb(newBreadcrumbData)
     const createdBreadcrumb = await newBreadcrumb.save()
+    await Customer.findOneAndUpdate(
+        { _id: contact.customer._id },
+        { $push: { breadcrumbs: createdBreadcrumb._id } }
+    )
 
     addLog({
         type: record ? 'endofcallback' : 'missingcallback',
