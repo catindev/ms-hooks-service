@@ -60,7 +60,8 @@ const customerSchema = new Schema({
     funnelStep: { type: String, default: 'lead' },
     nonTargetedReason: String,
     fromWidget: { type: Boolean, default: false },
-    contacts: [{ type: ObjectId, ref: 'Contact' }]
+    contacts: [{ type: ObjectId, ref: 'Contact' }],
+    breadcrumbs: [{ type: ObjectId, ref: 'Breadcrumb' }]
 })
 customerSchema.pre('save', function (next) {
     if (!this.name) this.name = generate()
