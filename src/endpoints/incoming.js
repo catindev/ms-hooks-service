@@ -76,7 +76,7 @@ module.exports = async (request, response, next) => {
         trunk: trunk._id
     })
     const createdBreadcrumb = await newBreadcrumb.save()
-    await Customer.findOneAndUpdate(
+    const withBreadcrumbs = await Customer.update(
         { _id: createdCustomer._id },
         { $set: { breadcrumbs: [createdBreadcrumb._id] } }
     )
